@@ -24,11 +24,11 @@
             <td>${meal.date} ${meal.time}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
-            <td><a href="UserController?action=edit&id=<c:out value="${meal.id}"/>">Update</a></td>
-            <td><a href="UserController?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
+            <td><a href="meals?action=edit&id=<c:out value="${meal.id}"/>">Update</a></td>
+            <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
     </tr>
     </c:forEach>
-    <p><a href="UserController?action=insert">Add meal</a></p>
+    <p><a href="meals?action=insert">Add meal</a></p>
 </table>
 </body>
 </html>

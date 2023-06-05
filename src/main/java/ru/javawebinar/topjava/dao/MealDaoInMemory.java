@@ -20,7 +20,7 @@ public class MealDaoInMemory implements MealDao{
         meals.put(5, new Meal(5, LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
         meals.put(6, new Meal(6, LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
         meals.put(7, new Meal(7, LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
-        counter.set(7);
+        counter.set(8);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class MealDaoInMemory implements MealDao{
     }
 
     @Override
-    public Meal getById(int id) {
+    public Meal get(int id) {
         return meals.get(id);
     }
 }
