@@ -16,16 +16,19 @@
 <h2>Meals</h2>
 <table>
     <tr>
-        <th>Date and time</th><th>Name</th><th>Calories</th>
+        <th>Date and time</th><th>Name</th><th>Calories</th><th colspan=2>Action</th>
     </tr>
     <jsp:useBean id="meals" scope="request" type="java.util.List"/>
     <c:forEach var="meal" items="${meals}">
         <tr style="color:${meal.excess == true ? "red" : "green"}">
-        <th>${meal.date} ${meal.time}</th>
-        <th>${meal.description}</th>
-        <th>${meal.calories}</th>
+            <td>${meal.date} ${meal.time}</td>
+            <td>${meal.description}</td>
+            <td>${meal.calories}</td>
+            <td><a href="UserController?action=edit&id=<c:out value="${meal.id}"/>">Update</a></td>
+            <td><a href="UserController?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
     </tr>
     </c:forEach>
+    <p><a href="UserController?action=insert">Add meal</a></p>
 </table>
 </body>
 </html>
