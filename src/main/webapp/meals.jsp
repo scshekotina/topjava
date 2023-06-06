@@ -7,6 +7,10 @@
             border: 1px solid black;
             padding: 5px;
         }
+        label {
+            display: inline-block;
+            min-width: 100px;
+        }
     </style>
     <title>Meals</title>
 </head>

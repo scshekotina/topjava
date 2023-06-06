@@ -3,16 +3,17 @@ package ru.javawebinar.topjava.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 public class Meal {
 
     private Integer id;
 
-    private LocalDateTime dateTime;
+    private LocalDateTime dateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
     private String description;
 
-    private int calories;
+    private int calories = 0;
 
     public Meal() {
     }

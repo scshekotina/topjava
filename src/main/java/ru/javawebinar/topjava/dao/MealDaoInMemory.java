@@ -5,11 +5,12 @@ import ru.javawebinar.topjava.model.Meal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealDaoInMemory implements MealDao{
 
-    private static Map<Integer, Meal> meals = new HashMap<>();
+    private static Map<Integer, Meal> meals = new ConcurrentHashMap<>();
     private static AtomicInteger counter = new AtomicInteger(0);
 
     public MealDaoInMemory() {

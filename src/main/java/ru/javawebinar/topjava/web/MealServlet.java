@@ -37,6 +37,8 @@ public class MealServlet extends HttpServlet {
         } else if (action.equalsIgnoreCase("delete")) {
             log.debug("delete meal id = " + req.getParameter("id"));
             dao.delete(Integer.parseInt(req.getParameter("id")));
+            List<MealTo> mealTos = MealsUtil.filteredByStreams(dao.getAll(), LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DAY);
+            req.setAttribute("meals", mealTos);
         } else if (action.equalsIgnoreCase("edit")) {
             int id = Integer.parseInt(req.getParameter("id"));
             log.debug("edit meal id = " + id);
@@ -45,6 +47,7 @@ public class MealServlet extends HttpServlet {
             forward = "/meal.jsp";
         } else if (action.equalsIgnoreCase("insert")) {
             log.debug("insert meal");
+            req.setAttribute("meal", new Meal());
             forward = "/meal.jsp";
         }
 
@@ -53,6 +56,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         Meal meal = new Meal();
         try {
             meal.setDateTime(LocalDateTime.parse(req.getParameter("datetime")));
@@ -62,7 +66,7 @@ public class MealServlet extends HttpServlet {
         }
         meal.setDescription(req.getParameter("description"));
         String mealId = req.getParameter("mealId");
-        if (mealId == null) {
+        if (mealId == null || mealId.isEmpty()) {
             dao.add(meal);
         }
         else {
