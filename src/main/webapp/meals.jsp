@@ -20,6 +20,21 @@
 <section>
     <h3><a href="index.html">Home</a></h3>
     <hr/>
+    <form method="post" action="meals?action=filter">
+        <label>От даты (включая):
+            <input type="date" value="${dateFrom}" name="dateFrom">
+        </label>
+        <label>До даты (включая):
+            <input type="date" value="${dateTo}" name="dateTo">
+        </label>
+        <label>От времени (включая):
+            <input type="time" value="${timeFrom}" name="timeFrom">
+        </label>
+        <label>До времени (исключая):
+            <input type="time" value="${timeTo}" name="timeTo">
+        </label>
+        <button type="submit">Filter</button>
+    </form>
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>

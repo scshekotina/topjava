@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -35,23 +37,54 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
-        String id = request.getParameter("id");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        if (request.getParameter("action").equalsIgnoreCase("filter")) {
+            log.info("Filtering");
+            String dateFromInForm = request.getParameter("dateFrom");
+            LocalDate dateFrom = dateFromInForm != null &&
+                    !dateFromInForm.isEmpty() ?
+                    LocalDate.parse(dateFromInForm) :
+                    null;
+            String dateToFromForm = request.getParameter("dateTo");
+            LocalDate dateTo = dateToFromForm != null &&
+                    !dateToFromForm.isEmpty() ?
+                    LocalDate.parse(dateToFromForm) :
+                    null;
+            String timeFromFromForm = request.getParameter("timeFrom");
+            LocalTime timeFrom = timeFromFromForm != null &&
+                    !timeFromFromForm.isEmpty() ?
+                    LocalTime.parse(timeFromFromForm) :
+                    null;
+            String timeToFromForm = request.getParameter("timeTo");
+            LocalTime timeTo = timeToFromForm != null &&
+                    !timeToFromForm.isEmpty() ?
+                    LocalTime.parse(timeToFromForm) :
+                    null;
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
-
-        if (meal.isNew()) {
-            log.info("Create {}", meal);
-            mealRestController.create(meal);
+            request.setAttribute("meals", mealRestController.getAll(dateFrom, dateTo, timeFrom, timeTo));
+            request.setAttribute("dateFrom", dateFrom);
+            request.setAttribute("dateTo", dateTo);
+            request.setAttribute("timeFrom", timeFrom);
+            request.setAttribute("timeTo", timeTo);
+            request.getRequestDispatcher("/meals.jsp").forward(request, response);
         } else {
-            log.info("Update {}", meal);
-            mealRestController.update(meal, meal.getId());
+            request.setCharacterEncoding("UTF-8");
+            String id = request.getParameter("id");
+
+            Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+                    LocalDateTime.parse(request.getParameter("dateTime")),
+                    request.getParameter("description"),
+                    Integer.parseInt(request.getParameter("calories")));
+
+            if (meal.isNew()) {
+                log.info("Create {}", meal);
+                mealRestController.create(meal);
+            } else {
+                log.info("Update {}", meal);
+                mealRestController.update(meal, meal.getId());
+            }
+            response.sendRedirect("meals");
         }
-        response.sendRedirect("meals");
     }
 
     @Override

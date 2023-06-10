@@ -10,6 +10,8 @@ import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.ValidationUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserCaloriesPerDay;
@@ -26,6 +28,11 @@ public class MealRestController {
     public List<MealTo> getAll() {
         log.info("get all meals");
         return MealsUtil.getTos(service.getAll(authUserId()), authUserCaloriesPerDay());
+    }
+
+    public List<MealTo> getAll(LocalDate dateFrom, LocalDate dateTo, LocalTime timeFrom, LocalTime timeTo) {
+        log.info("filter meals");
+        return MealsUtil.getFilteredTos(service.getAll(dateFrom, dateTo, authUserId()), authUserCaloriesPerDay(), timeFrom, timeTo);
     }
 
     public Meal get(int id) {
