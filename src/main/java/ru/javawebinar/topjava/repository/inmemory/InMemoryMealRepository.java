@@ -1,14 +1,19 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
+import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
+@Repository
 public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
@@ -19,14 +24,24 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        Map<Integer, Meal> userMealMap = repository.getOrDefault(userId, new ConcurrentHashMap<>());
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
+            Map<Integer, Meal> userMealMap = repository.get(userId);
+            if (userMealMap != null) {
+                userMealMap.put(meal.getId(), meal);
+                return meal;
+            }
+            userMealMap = new ConcurrentHashMap<>();
             userMealMap.put(meal.getId(), meal);
+            repository.put(userId, userMealMap);
             return meal;
         }
-        // handle case: update, but not present in storage
-        return userMealMap.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        Map<Integer, Meal> userMealMap = repository.get(userId);
+        if (userMealMap != null) {
+            // handle case: update, but not present in storage
+            return userMealMap.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        }
+        return meal;
     }
 
     @Override
@@ -43,7 +58,12 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Collection<Meal> getAll(int userId) {
-        return repository.get(userId).values();
+        Map<Integer, Meal> allMeals = repository.get(userId);
+        if (allMeals == null) {
+            return new ArrayList<>();
+        }
+        return allMeals.values().stream().sorted(Comparator.comparing(Meal::getDateTime))
+                .collect(Collectors.toList());
     }
 }
 
