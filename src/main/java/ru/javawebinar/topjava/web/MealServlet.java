@@ -57,7 +57,9 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-
+        if (request.getParameter("user") != null) {
+            SecurityUtil.setAuthUserId(Integer.parseInt(request.getParameter("user")));
+        }
         switch (action == null ? "all" : action) {
             case "delete":
                 int id = getId(request);

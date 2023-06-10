@@ -12,6 +12,7 @@ import ru.javawebinar.topjava.util.ValidationUtil;
 
 import java.util.List;
 
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserCaloriesPerDay;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
@@ -24,7 +25,7 @@ public class MealRestController {
 
     public List<MealTo> getAll() {
         log.info("get all meals");
-        return MealsUtil.getTos(service.getAll(authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+        return MealsUtil.getTos(service.getAll(authUserId()), authUserCaloriesPerDay());
     }
 
     public Meal get(int id) {
