@@ -38,7 +38,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if (request.getParameter("action").equalsIgnoreCase("filter")) {
+        if (request.getParameter("action") != null && request.getParameter("action") .equalsIgnoreCase("filter")) {
             log.info("Filtering");
             String dateFromInForm = request.getParameter("dateFrom");
             LocalDate dateFrom = dateFromInForm != null &&
