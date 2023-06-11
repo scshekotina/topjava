@@ -14,25 +14,31 @@
         .excess {
             color: red;
         }
+        .col-2 {
+            flex: 0 0 16.666667%;
+            max-width: 16.666667%;
+        }
     </style>
 </head>
 <body>
 <section>
     <h3><a href="index.html">Home</a></h3>
     <hr/>
-    <form method="post" action="meals?action=filter">
-        <label>От даты (включая):
+    <form style="outline-style: solid; outline-width: thin" method="post" action="meals?action=filter">
+        <div class="col-2"><label>От даты (включая):
             <input type="date" value="${dateFrom}" name="dateFrom">
         </label>
-        <label>До даты (включая):
+        </div>
+        <div class="col-2"><label>До даты (включая):
             <input type="date" value="${dateTo}" name="dateTo">
-        </label>
-        <label>От времени (включая):
+        </label></div>
+        <div class="col-2"><label>От времени (включая):
             <input type="time" value="${timeFrom}" name="timeFrom">
-        </label>
-        <label>До времени (исключая):
+        </label></div>
+        <div class="col-2"><label>До времени (исключая):
             <input type="time" value="${timeTo}" name="timeTo">
         </label>
+        </div>
         <button type="submit">Filter</button>
     </form>
     <h2>Meals</h2>
