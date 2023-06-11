@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.web.user.MealRestController;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+
+import static ru.javawebinar.topjava.util.DateTimeUtil.getDateOrNullFromRequest;
+import static ru.javawebinar.topjava.util.DateTimeUtil.getTimeOrNullFromRequest;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
@@ -40,26 +43,10 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if (request.getParameter("action") != null && request.getParameter("action") .equalsIgnoreCase("filter")) {
             log.info("Filtering");
-            String dateFromInForm = request.getParameter("dateFrom");
-            LocalDate dateFrom = dateFromInForm != null &&
-                    !dateFromInForm.isEmpty() ?
-                    LocalDate.parse(dateFromInForm) :
-                    null;
-            String dateToFromForm = request.getParameter("dateTo");
-            LocalDate dateTo = dateToFromForm != null &&
-                    !dateToFromForm.isEmpty() ?
-                    LocalDate.parse(dateToFromForm) :
-                    null;
-            String timeFromFromForm = request.getParameter("timeFrom");
-            LocalTime timeFrom = timeFromFromForm != null &&
-                    !timeFromFromForm.isEmpty() ?
-                    LocalTime.parse(timeFromFromForm) :
-                    null;
-            String timeToFromForm = request.getParameter("timeTo");
-            LocalTime timeTo = timeToFromForm != null &&
-                    !timeToFromForm.isEmpty() ?
-                    LocalTime.parse(timeToFromForm) :
-                    null;
+            LocalDate dateFrom = getDateOrNullFromRequest(request, "dateFrom");
+            LocalDate dateTo = getDateOrNullFromRequest(request, "dateTo");
+            LocalTime timeFrom = getTimeOrNullFromRequest(request, "timeFrom");
+            LocalTime timeTo = getTimeOrNullFromRequest(request, "timeTo");
 
             request.setAttribute("meals", mealRestController.getAll(dateFrom, dateTo, timeFrom, timeTo));
             request.setAttribute("dateFrom", dateFrom);

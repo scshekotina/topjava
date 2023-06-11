@@ -2,7 +2,7 @@ package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 // TODO add userId
@@ -19,5 +19,5 @@ public interface MealRepository {
     // ORDERED dateTime desc
     List<Meal> getAll(int userId);
 
-    List<Meal> getAll(LocalDate dateFrom, LocalDate dateTo, int userId);
+    List<Meal> getAllHalfOpen(LocalDateTime dateFrom, LocalDateTime dateTo, int userId);
 }

@@ -6,7 +6,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.web.user.AdminRestController;
-import ru.javawebinar.topjava.web.user.MealRestController;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
