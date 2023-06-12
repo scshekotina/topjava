@@ -14,33 +14,57 @@
         .excess {
             color: red;
         }
-        .col-2 {
-            flex: 0 0 16.666667%;
-            max-width: 16.666667%;
+
+        .filter-col-1 {
+            display: table-cell;
+            width: 130px;
+        }
+        .filter-col-padding {
+            padding-left: 100px;
+        }
+        .filter-col-2 {
+            display: table-cell;
+            width: 900px;
+        }
+        .filter-form {
+            outline-style: solid;
+            outline-width: thin;
+            padding: 10px;
+        }
+        .meals-list {
+            margin: 1% 10% 1% 10%;
+        }
+        .filter-button {
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 <section>
-    <h3><a href="index.html">Home</a></h3>
+    <div class="meals-list">
+        <h3><a href="index.html">Home</a></h3>
     <hr/>
-    <form style="outline-style: solid; outline-width: thin" method="post" action="meals?action=filter">
-        <div class="col-2"><label>От даты (включая):
-            <input type="date" value="${dateFrom}" name="dateFrom">
-        </label>
-        </div>
-        <div class="col-2"><label>До даты (включая):
-            <input type="date" value="${dateTo}" name="dateTo">
-        </label></div>
-        <div class="col-2"><label>От времени (включая):
-            <input type="time" value="${timeFrom}" name="timeFrom">
-        </label></div>
-        <div class="col-2"><label>До времени (исключая):
-            <input type="time" value="${timeTo}" name="timeTo">
-        </label>
-        </div>
-        <button type="submit">Filter</button>
-    </form>
+    <div class="filter-form">
+        <form method="post" action="meals?action=filter">
+            <div class="filter-col-1"><label>От даты (включая):
+                <input type="date" value="${dateFrom}" name="dateFrom">
+            </label>
+            </div>
+            <div class="filter-col-1"><label>До даты (включая):
+                <input type="date" value="${dateTo}" name="dateTo">
+            </label></div>
+            <div class="filter-col-2 filter-col-padding"><label>От времени (включая):
+                <input type="time" value="${timeFrom}" name="timeFrom">
+            </label></div>
+            <div class="filter-col-2"><label>До времени (исключая):
+                <input type="time" value="${timeTo}" name="timeTo">
+            </label>
+            </div>
+            <div class="filter-button">
+                <button type="submit">Filter</button>
+            </div>
+        </form>
+    </div>
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
@@ -70,6 +94,7 @@
             </tr>
         </c:forEach>
     </table>
+    </div>
 </section>
 </body>
 </html>
