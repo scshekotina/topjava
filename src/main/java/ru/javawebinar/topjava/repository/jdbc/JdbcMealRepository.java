@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -55,18 +56,30 @@ public class JdbcMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM meals WHERE id = ? AND user_id = ? ORDER BY datetime", ROW_MAPPER, id, userId);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM meals WHERE id = ? AND user_id = ? ORDER BY datetime", ROW_MAPPER, id, userId);
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id = ? ORDER BY datetime DESC", ROW_MAPPER, userId);
+        try {
+            return jdbcTemplate.query("SELECT * FROM meals WHERE user_id = ? ORDER BY datetime DESC", ROW_MAPPER, userId);
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        return jdbcTemplate.query(
-                "SELECT * FROM meals WHERE user_id = ? AND datetime >= ? AND datetime <= ? ORDER BY datetime DESC",
-                ROW_MAPPER, userId, startDateTime, endDateTime);
+        try {
+            return jdbcTemplate.query(
+                    "SELECT * FROM meals WHERE user_id = ? AND datetime >= ? AND datetime < ? ORDER BY datetime DESC",
+                    ROW_MAPPER, userId, startDateTime, endDateTime);
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 }
