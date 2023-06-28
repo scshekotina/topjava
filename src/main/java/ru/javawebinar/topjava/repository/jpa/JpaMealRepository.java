@@ -27,9 +27,16 @@ public class JpaMealRepository implements MealRepository {
         if (meal.isNew()) {
             em.persist(meal);
             return meal;
-        } else {
-            return em.merge(meal);
+        } else if (em.createNamedQuery(Meal.UPDATE)
+                .setParameter("description", meal.getDescription())
+                .setParameter("calories", meal.getCalories())
+                .setParameter("dateTime", meal.getDateTime())
+                .setParameter("id", meal.id())
+                .setParameter("userId", userId)
+                .executeUpdate() == 1) {
+            return meal;
         }
+        return null;
     }
 
     @Override
@@ -41,7 +48,8 @@ public class JpaMealRepository implements MealRepository {
                 em.remove(mealReference);
                 return true;
             }
-        } catch (EntityNotFoundException ignored) {}
+        } catch (EntityNotFoundException ignored) {
+        }
         return false;
     }
 

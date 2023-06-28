@@ -16,24 +16,29 @@ import java.time.LocalTime;
         @NamedQuery(name = Meal.BETWEEN_HALF_OPEN,
                 query = "SELECT m FROM Meal m WHERE m.user.id=?3  AND m.dateTime >= ?1 " +
                         "AND m.dateTime < ?2 ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.UPDATE, query = "UPDATE Meal m " +
+                "SET m.description=:description, m.calories=:calories, m.dateTime=:dateTime " +
+                "WHERE m.id=:id AND m.user.id=:userId")
 })
 @Entity
-@Table(name="meal")
+@Table(name="meal", uniqueConstraints = @UniqueConstraint(
+        name = "meal_unique_user_datetime_id", columnNames = {"user_id", "date_time"}))
 public class Meal extends AbstractBaseEntity {
 
     public static final String ALL_SORTED = "Meal.getAllSorted";
     public static final String BETWEEN_HALF_OPEN = "Meal.getBetweenHalfOpen";
+    public static final String UPDATE = "Meal.update";
 
-    @Column(name="date_time", nullable = false)
+    @Column(name="date_time", nullable = false, columnDefinition = "TIMESTAMP")
     @NotNull
     private LocalDateTime dateTime;
 
-    @Column(name="description", nullable = false)
+    @Column(name="description", nullable = false, columnDefinition = "VARCHAR(255)")
     @NotBlank
     @Size(min = 1, max = 128)
     private String description;
 
-    @Column(name="calories", nullable = false)
+    @Column(name="calories", nullable = false, columnDefinition = "INT")
     @Range(min = 1)
     private int calories;
 
