@@ -1,8 +1,14 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Ignore;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExternalResource;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,8 +20,12 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertThrows;
+import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -28,8 +38,40 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+    private static final Logger log = getLogger(MealServiceTest.class);
+
     @Autowired
     private MealService service;
+
+    private static Map<String, Long> durations = new HashMap<>();
+
+    @Rule
+    public final TestRule watchman = new TestWatcher() {
+
+        private Date start;
+
+        @Override
+        protected void starting(Description description) {
+            start = new Date();
+        }
+
+        @Override
+        protected void finished(Description description) {
+            long duration = new Date().getTime() - start.getTime();
+            log.debug("\nDuration: " + duration + " ms");
+            durations.put(description.getMethodName(), duration);
+        }
+    };
+
+    @ClassRule
+    public static final ExternalResource resource = new ExternalResource() {
+        @Override
+        protected void after() {
+            for (Map.Entry<String, Long> entry : durations.entrySet()) {
+                log.debug(entry.getKey() + ": " + entry.getValue() + " ms");
+            }
+        }
+    };
 
     @Test
     public void delete() {
