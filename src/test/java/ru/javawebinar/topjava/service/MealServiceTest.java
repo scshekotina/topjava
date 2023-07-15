@@ -50,7 +50,7 @@ public abstract class MealServiceTest {
     };
 
     @Autowired
-    private MealService service;
+    protected MealService service;
 
     @AfterClass
     public static void printResult() {
@@ -139,5 +139,10 @@ public abstract class MealServiceTest {
     @Test
     public void getBetweenWithNullDates() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
+    }
+
+    @Test
+    public void getWithUser() {
+        assertThrows(UnsupportedOperationException.class, () -> service.getWithUser(ADMIN_MEAL_ID, ADMIN_ID));
     }
 }

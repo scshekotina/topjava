@@ -53,7 +53,7 @@ public abstract class UserServiceTest {
         }
     };
     @Autowired
-    private UserService service;
+    protected UserService service;
 
     @Autowired
     private CacheManager cacheManager;
@@ -127,5 +127,10 @@ public abstract class UserServiceTest {
     public void getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
+    }
+
+    @Test
+    public void getWithMeals() {
+        assertThrows(UnsupportedOperationException.class, () -> service.getWithMeals(UserTestData.USER_ID));
     }
 }

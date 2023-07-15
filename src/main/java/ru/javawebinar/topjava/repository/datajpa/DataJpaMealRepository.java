@@ -68,4 +68,8 @@ public class DataJpaMealRepository implements MealRepository {
         User userReference = crudUserRepository.getReferenceById(userId);
         return crudMealRepository.findByDateTimeBetweenAndUserOrderByDateTimeDesc(startDateTime, endDateTime.minusMinutes(1), userReference);
     }
+
+    public Meal getWithUser(int id, int userId){
+        return crudMealRepository.getWithUser(id, userId);
+    }
 }
